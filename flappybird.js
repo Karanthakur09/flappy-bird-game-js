@@ -28,6 +28,8 @@ let pipeY = 0;
 let topPipeImg;
 let bottomPipeImg;
 
+let velocityX = -2; //pipes moving left speed
+let velocityY = 0; //bird jump speed
 
 
 //when the page loads
@@ -61,8 +63,27 @@ function update() {
 
     //bird
     context.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
+
+    for (let i = 0; i < pipeArray.length; i++) {
+        let pipe = pipeArray[i];
+        pipe.x += velocityX;
+        context.drawImage(pipe.img, pipe.x, pipe.y, pipe.width, pipe.height);
+
+        // if (!pipe.passed && bird.x > pipe.x + pipe.width) {
+        //     score += 0.5; //0.5 because there are 2 pipes! so 0.5*2 = 1, 1 for each set of pipes
+        //     pipe.passed = true;
+        // }
+
+        // if (detectCollision(bird, pipe)) {
+        //     gameOver = true;
+        // }
+    }
+
 }
 function placePipes() {
+    let randomPipeY = pipeY - pipeHeight/4 - Math.random()*(pipeHeight/2);
+    let openingSpace = board.height/4;
+
 
     let topPipe = {
         img: topPipeImg,
@@ -73,5 +94,28 @@ function placePipes() {
         passed: false
     }
     pipeArray.push(topPipe);
+    let bottomPipe = {
+        img : bottomPipeImg,
+        x : pipeX,
+        y : randomPipeY + pipeHeight + openingSpace,
+        width : pipeWidth,
+        height : pipeHeight,
+        passed : false
+    }
+    pipeArray.push(bottomPipe);
 
+}
+function moveBird(e) {
+    if (e.code == "Space" || e.code == "ArrowUp" || e.code == "KeyX") {
+        //jump
+        velocityY = -6;
+
+        //reset game
+        // if (gameOver) {
+        //     bird.y = birdY;
+        //     pipeArray = [];
+        //     score = 0;
+        //     gameOver = false;
+        // }
+    }
 }
